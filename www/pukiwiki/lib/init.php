@@ -39,13 +39,6 @@ $related      = array();	// Related pages
 $head_tags    = array();	// XHTML tags in <head></head>
 
 /////////////////////////////////////////////////
-// Time settings
-
-define('LOCALZONE', date('Z'));
-define('UTIME', time() - LOCALZONE);
-define('MUTIME', getmicrotime());
-
-/////////////////////////////////////////////////
 // Require INI_FILE
 
 define('INI_FILE',  DATA_HOME . 'pukiwiki.ini.php');
@@ -56,6 +49,34 @@ if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {
 	require(INI_FILE);
 }
 if ($die) die_message(nl2br("\n\n" . $die));
+
+/////////////////////////////////////////////////
+// Time settings
+//set date.timezone
+//http://jp.php.net/manual/ja/function.date-default-timezone-set.php
+/*
+switch (LANG) {
+	case 'ja':
+			date_default_timezone_set('Asia/Tokyo');
+	break;
+	default:
+		if (ini_get('date.timezone') === '') {
+
+
+		}
+		;
+	break;
+}
+*/
+//@todo
+if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
+@date_default_timezone_set(@date_default_timezone_get());
+
+define('LOCALZONE', date('Z'));
+define('UTIME', time() - LOCALZONE);
+define('MUTIME', getmicrotime());
+
+
 
 /////////////////////////////////////////////////
 // INI_FILE: LANG に基づくエンコーディング設定

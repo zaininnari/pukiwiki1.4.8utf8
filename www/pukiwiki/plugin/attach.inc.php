@@ -65,7 +65,7 @@ function plugin_attach_convert()
 
 	$ret = '';
 	if (! $nolist) {
-		$obj  = & new AttachPages($page);
+		$obj  = new AttachPages($page);
 		$ret .= $obj->toString($page, TRUE);
 	}
 	if (! $noform) {
@@ -139,13 +139,14 @@ function attach_filelist()
 
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
-	$obj = & new AttachPages($page, 0);
+	$obj = new AttachPages($page, 0);
 
 	if (! isset($obj->pages[$page])) {
 		return '';
 	} else {
-		return $_attach_messages['msg_file'] . ': ' .
-		$obj->toString($page, TRUE) . "\n";
+		$return = $_attach_messages['msg_file'] . ': ' .
+			$obj->toString($page, TRUE) . "\n";
+		return $return;
 	}
 }
 
@@ -186,7 +187,7 @@ function attach_upload($file, $page, $pass = NULL)
 			'msg'=>$_attach_messages['err_adminpass']);
 	}
 
-	$obj = & new AttachFile($page, $file['name']);
+	$obj = new AttachFile($page, $file['name']);
 	if ($obj->exist)
 		return array('result'=>FALSE,
 			'msg'=>$_attach_messages['err_exists']);
@@ -236,7 +237,7 @@ function attach_info($err = '')
 	foreach (array('refer', 'file', 'age') as $var)
 		${$var} = isset($vars[$var]) ? $vars[$var] : '';
 
-	$obj = & new AttachFile($refer, $file, $age);
+	$obj = new AttachFile($refer, $file, $age);
 	return $obj->getstatus() ?
 		$obj->info($err) :
 		array('msg'=>$_attach_messages['err_notfound']);
@@ -253,10 +254,10 @@ function attach_delete()
 	if (is_freeze($refer) || ! is_editable($refer))
 		return array('msg'=>$_attach_messages['err_noparm']);
 
-	$obj = & new AttachFile($refer, $file, $age);
+	$obj = new AttachFile($refer, $file, $age);
 	if (! $obj->getstatus())
 		return array('msg'=>$_attach_messages['err_notfound']);
-		
+
 	return $obj->delete($pass);
 }
 
@@ -272,7 +273,7 @@ function attach_freeze($freeze)
 	if (is_freeze($refer) || ! is_editable($refer)) {
 		return array('msg'=>$_attach_messages['err_noparm']);
 	} else {
-		$obj = & new AttachFile($refer, $file, $age);
+		$obj = new AttachFile($refer, $file, $age);
 		return $obj->getstatus() ?
 			$obj->freeze($freeze, $pass) :
 			array('msg'=>$_attach_messages['err_notfound']);
@@ -291,7 +292,7 @@ function attach_rename()
 	if (is_freeze($refer) || ! is_editable($refer)) {
 		return array('msg'=>$_attach_messages['err_noparm']);
 	}
-	$obj = & new AttachFile($refer, $file, $age);
+	$obj = new AttachFile($refer, $file, $age);
 	if (! $obj->getstatus())
 		return array('msg'=>$_attach_messages['err_notfound']);
 
@@ -308,7 +309,7 @@ function attach_open()
 		${$var} = isset($vars[$var]) ? $vars[$var] : '';
 	}
 
-	$obj = & new AttachFile($refer, $file, $age);
+	$obj = new AttachFile($refer, $file, $age);
 	return $obj->getstatus() ?
 		$obj->open() :
 		array('msg'=>$_attach_messages['err_notfound']);
@@ -321,7 +322,7 @@ function attach_list()
 
 	$refer = isset($vars['refer']) ? $vars['refer'] : '';
 
-	$obj = & new AttachPages($refer);
+	$obj = new AttachPages($refer);
 
 	$msg = $_attach_messages[($refer == '') ? 'msg_listall' : 'msg_listpage'];
 	$body = ($refer == '' || isset($obj->pages[$refer])) ?
@@ -744,7 +745,7 @@ class AttachFiles
 
 	function add($file, $age)
 	{
-		$this->files[$file][$age] = & new AttachFile($this->page, $file, $age);
+		$this->files[$file][$age] = new AttachFile($this->page, $file, $age);
 	}
 
 	// ファイル一覧を取得
@@ -825,7 +826,7 @@ class AttachPages
 			$_file = decode($matches[2]);
 			$_age  = isset($matches[3]) ? $matches[3] : 0;
 			if (! isset($this->pages[$_page])) {
-				$this->pages[$_page] = & new AttachFiles($_page);
+				$this->pages[$_page] = new AttachFiles($_page);
 			}
 			$this->pages[$_page]->add($_file, $_age);
 		}
