@@ -38,7 +38,7 @@ function links_get_related_db($page)
 	$times = array();
 	foreach (file($ref_name) as $line) {
 		list($_page) = explode("\t", rtrim($line));
-		$time = get_filetime($_page);	
+		$time = get_filetime($_page);
 		if($time != 0) $times[$_page] = $time;
 	}
 	return $times;
@@ -82,7 +82,7 @@ function links_update($page)
 		}
 	}
 	$rel_new = array_unique($rel_new);
-	
+
 	// All pages "Referenced to" only by AutoLink
 	$rel_auto = array_diff(array_unique($rel_auto), $rel_new);
 
@@ -193,7 +193,7 @@ function links_add($page, $add, $rel_auto)
 	if (PKWK_READONLY) return; // Do nothing
 
 	$rel_auto = array_flip($rel_auto);
-	
+
 	foreach ($add as $_page) {
 		$all_auto = isset($rel_auto[$_page]);
 		$is_page  = is_page($_page);
@@ -251,7 +251,7 @@ function & links_get_objects($page, $refresh = FALSE)
 	static $obj;
 
 	if (! isset($obj) || $refresh)
-		$obj = & new InlineConverter(NULL, array('note'));
+		$obj = new InlineConverter(NULL, array('note'));
 
 	$result = $obj->get_objects(join('', preg_grep('/^(?!\/\/|\s)./', get_source($page))), $page);
 	return $result;

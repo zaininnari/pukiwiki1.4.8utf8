@@ -203,7 +203,7 @@ function array_count_leaves($array = array(), $count_empty = FALSE)
 // Similar to PHP array_merge_leaves(), except strictly preserving keys as string
 function array_merge_leaves($array1, $array2, $sort_keys = TRUE)
 {
-	// Array(s) only 
+	// Array(s) only
 	$is_array1 = is_array($array1);
 	$is_array2 = is_array($array2);
 	if ($is_array1) {
@@ -491,7 +491,7 @@ function blocklist_distiller(& $hosts, $keys = array('goodhost', 'badhost'), $as
 					if ($group) {
 						$hosts = array_diff($hosts, $group);
 						$blocked[$key][$label][$_label] = $group;
-						if ($asap && $list[$key]) break;
+						if ($asap && isset($list[$key]) && $list[$key]) break;
 					}
 				}
 			} else {
@@ -499,7 +499,7 @@ function blocklist_distiller(& $hosts, $keys = array('goodhost', 'badhost'), $as
 				if ($group) {
 					$hosts = array_diff($hosts, $group);
 					$blocked[$key][$label] = $group;
-					if ($asap && $list[$key]) break;
+					if ($asap && isset($list[$key]) && $list[$key]) break;
 				}
 			}
 		}

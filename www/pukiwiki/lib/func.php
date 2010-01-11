@@ -368,9 +368,9 @@ function page_list($pages = array('pagename.txt' => 'pagename'), $cmd = 'read', 
 			// WARNING: Japanese code hard-wired
 			if(mb_ereg('^([A-Za-z])', mb_convert_kana($page, 'a'), $matches)) {
 				$initial = & $matches[1];
-			} elseif (isset($readings[$page]) && mb_ereg('^([¥¡-¥ö])', $readings[$page], $matches)) { // here
+			} elseif (isset($readings[$page]) && mb_ereg('^([ã‚¡-ãƒ¶])', $readings[$page], $matches)) { // here
 				$initial = & $matches[1];
-			} elseif (mb_ereg('^[ -~]|[^¤¡-¤ó°¡-ô¦]', $page)) { // and here
+			} elseif (mb_ereg('^[ -~]|[^ã-ã‚“äºœ-ç†™]', $page)) { // and here
 				$initial = & $sentinel_symbol;
 			} else {
 				$initial = & $sentinel_another;
@@ -472,6 +472,7 @@ function catrule()
 function die_message($msg)
 {
 	$title = $page = 'Runtime error';
+	$charset = SOURCE_ENCODING;
 	$body = <<<EOD
 <h3>Runtime error</h3>
 <strong>Error message : $msg</strong>
@@ -487,7 +488,7 @@ EOD;
 <html>
  <head>
   <title>$title</title>
-  <meta http-equiv="content-type" content="text/html; charset=euc-jp">
+  <meta http-equiv="content-type" content="text/html; charset="{$charset}">
  </head>
  <body>
  $body
@@ -566,7 +567,7 @@ function get_autolink_pattern(& $pages, $min_len = -1)
 {
 	global $WikiName, $autolink, $nowikiname;
 
-	$config = &new Config('AutoLink');
+	$config = new Config('AutoLink');
 	$config->read();
 	$ignorepages      = $config->get('IgnoreList');
 	$forceignorepages = $config->get('ForceIgnoreList');
@@ -634,7 +635,7 @@ function preg_quote_extended($string, $delimiter = NULL)
 //     * array_keys($array) MUST BE _continuous_integers_started_with_0_.
 //     * Type of all $array-values MUST BE string.
 //   $_offset : (int) internal use. $array[$_offset    ] is the first value to check
-//   $_sentry : (int) internal use. $array[$_sentry - 1] is the last  value to check  
+//   $_sentry : (int) internal use. $array[$_sentry - 1] is the last  value to check
 //   $_pos    : (int) internal use. Position of the letter to start checking. (0 = the first letter)
 //
 // REFERENCE: http://en.wikipedia.org/wiki/Trie
@@ -754,13 +755,13 @@ function get_script_uri($init_uri = '')
 		$script .= SERVER_NAME;	// host
 		$script .= (SERVER_PORT == 80 ? '' : ':' . SERVER_PORT);  // port
 
-		// SCRIPT_NAME ¤¬'/'¤Ç»Ï¤Ş¤Ã¤Æ¤¤¤Ê¤¤¾ì¹ç(cgi¤Ê¤É) REQUEST_URI¤ò»È¤Ã¤Æ¤ß¤ë
+		// SCRIPT_NAME ãŒ'/'ã§å§‹ã¾ã£ã¦ã„ãªã„å ´åˆ(cgiãªã©) REQUEST_URIã‚’ä½¿ã£ã¦ã¿ã‚‹
 		$path    = SCRIPT_NAME;
 		if ($path{0} != '/') {
 			if (! isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI']{0} != '/')
 				die_message($msg);
 
-			// REQUEST_URI¤ò¥Ñ¡¼¥¹¤·¡¢pathÉôÊ¬¤À¤±¤ò¼è¤ê½Ğ¤¹
+			// REQUEST_URIã‚’ãƒ‘ãƒ¼ã‚¹ã—ã€pathéƒ¨åˆ†ã ã‘ã‚’å–ã‚Šå‡ºã™
 			$parse_url = parse_url($script . $_SERVER['REQUEST_URI']);
 			if (! isset($parse_url['path']) || $parse_url['path']{0} != '/')
 				die_message($msg);
@@ -784,7 +785,7 @@ function get_script_uri($init_uri = '')
 	if (isset($script_directory_index)) {
 		if (! file_exists($script_directory_index))
 			die_message('Directory index file not found: ' .
-				htmlspecialchars($script_directory_index));
+				htmlspecialchars($script_directory_index,ENT_QUOTES,SOURCE_ENCODING));
 		$matches = array();
 		if (preg_match('#^(.+/)' . preg_quote($script_directory_index, '#') . '$#',
 			$script, $matches)) $script = $matches[1];
@@ -799,8 +800,8 @@ function get_script_uri($init_uri = '')
 // [PHP-users 12736] null byte attack
 // http://ns1.php.gr.jp/pipermail/php-users/2003-January/012742.html
 //
-// 2003-05-16: magic quotes gpc¤ÎÉü¸µ½èÍı¤òÅı¹ç
-// 2003-05-21: Ï¢ÁÛÇÛÎó¤Î¥­¡¼¤Ïbinary safe
+// 2003-05-16: magic quotes gpcã®å¾©å…ƒå‡¦ç†ã‚’çµ±åˆ
+// 2003-05-21: é€£æƒ³é…åˆ—ã®ã‚­ãƒ¼ã¯binary safe
 //
 function input_filter($param)
 {
@@ -862,7 +863,7 @@ if (! function_exists('is_a')) {
 
 	function is_a($class, $match)
 	{
-		if (empty($class)) return FALSE; 
+		if (empty($class)) return FALSE;
 
 		$class = is_object($class) ? get_class($class) : $class;
 		if (strtolower($class) == strtolower($match)) {

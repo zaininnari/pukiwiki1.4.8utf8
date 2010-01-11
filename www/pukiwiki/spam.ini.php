@@ -4778,7 +4778,7 @@ $blocklist['C'] = array(
 	),
 	'ECTechnology' => array(
 		'.atmouse.co.kr',		// by EG gisul (kpgak at hanmail.net)
-		'.auto-mouse.com',		// "Copyright Ò$ 2007 www.automouse.jp" by ECTechnology (help at atmouse.co.kr)
+		'.auto-mouse.com',		// "Copyright ï¾’$ 2007 www.automouse.jp" by ECTechnology (help at atmouse.co.kr)
 		'.automouse.jp',
 	),
 	'lyqz at 21cn.com' => array(

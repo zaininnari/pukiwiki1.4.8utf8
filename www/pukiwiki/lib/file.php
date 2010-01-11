@@ -157,7 +157,7 @@ function make_str_rules($source)
 		// Replace with $str_rules
 		foreach ($str_rules as $pattern => $replacement)
 			$line = preg_replace('/' . $pattern . '/', $replacement, $line);
-		
+
 		// Adding fixed anchor into headings
 		if ($fixed_heading_anchor &&
 		    preg_match('/^(\*{1,3}.*?)(?:\[#([A-Za-z][\w-]*)\]\s*)?$/', $line, $matches) &&
@@ -269,7 +269,7 @@ function file_write($dir, $page, $str, $notimestamp = FALSE)
 	$timestamp = ($file_exists && $notimestamp) ? filemtime($file) : FALSE;
 
 	$fp = fopen($file, 'a') or die('fopen() failed: ' .
-		htmlspecialchars(basename($dir) . '/' . encode($page) . '.txt') .	
+		htmlspecialchars(basename($dir) . '/' . encode($page) . '.txt') .
 		'<br />' . "\n" .
 		'Maybe permission is not writable or filename is too long');
 	set_file_buffer($fp, 0);
@@ -593,7 +593,7 @@ function get_readings()
 	$pages = get_existpages();
 
 	$readings = array();
-	foreach ($pages as $page) 
+	foreach ($pages as $page)
 		$readings[$page] = '';
 
 	$deletedPage = FALSE;

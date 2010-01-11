@@ -1,5 +1,5 @@
 *AutoAliasName [#qf9311bb]
-AutoAliasÍÑ¤ÎÄêµÁ¥ê¥¹¥È¤Ç¤¹¡£
+AutoAliasç”¨ã®å®šç¾©ãƒªã‚¹ãƒˆã§ã™ã€‚
 
 * PukiWiki [#ee87d39e]
 -[[pukiwiki.official>http://pukiwiki.sourceforge.jp/]]

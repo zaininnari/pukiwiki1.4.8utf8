@@ -19,7 +19,7 @@ function convert_html($lines)
 
 	if (! is_array($lines)) $lines = explode("\n", $lines);
 
-	$body = & new Body(++$contents_id);
+	$body = new Body(++$contents_id);
 	$body->parse($lines);
 
 	return $body->toString();
@@ -97,10 +97,12 @@ function & Factory_Inline($text)
 {
 	// Check the first letter of the line
 	if (substr($text, 0, 1) == '~') {
-		return new Paragraph(' ' . substr($text, 1));
+		$instance = new Paragraph(' ' . substr($text, 1));
 	} else {
-		return new Inline($text);
+		$instance = new Inline($text);
 	}
+		return $instance;
+
 }
 
 function & Factory_DList(& $root, $text)
@@ -109,7 +111,8 @@ function & Factory_DList(& $root, $text)
 	if (count($out) < 2) {
 		return Factory_Inline($text);
 	} else {
-		return new DList($out);
+		$instance = new DList($out);
+		return $instance;
 	}
 }
 
@@ -119,7 +122,8 @@ function & Factory_Table(& $root, $text)
 	if (! preg_match('/^\|(.+)\|([hHfFcC]?)$/', $text, $out)) {
 		return Factory_Inline($text);
 	} else {
-		return new Table($out);
+		$instance = new Table($out);
+		return $instance;
 	}
 }
 
@@ -129,7 +133,8 @@ function & Factory_YTable(& $root, $text)
 	if ($text == ',') {
 		return Factory_Inline($text);
 	} else {
-		return new YTable(csv_explode(',', substr($text, 1)));
+		$instance = new YTable(csv_explode(',', substr($text, 1)));
+		return $instance;
 	}
 }
 
@@ -141,8 +146,9 @@ function & Factory_Div(& $root, $text)
 	if (PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
 		// Usual code
 		if (preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $matches) &&
-		    exist_plugin_convert($matches[1])) {
-			return new Div($matches);
+			exist_plugin_convert($matches[1])) {
+			$instance = new Div($matches);
+			return $instance;
 		}
 	} else {
 		// Hack code
@@ -151,15 +157,16 @@ function & Factory_Div(& $root, $text)
 			$len  = strlen($matches[3]);
 			$body = array();
 			if ($len == 0) {
-				return new Div($matches); // Seems legacy block plugin
-			} else if (preg_match('/\{{' . $len . '}\s*\r(.*)\r\}{' . $len . '}/', $text, $body)) { 
+				$instance = new Div($matches); // Seems legacy block plugin
+			} else if (preg_match('/\{{' . $len . '}\s*\r(.*)\r\}{' . $len . '}/', $text, $body)) {
 				$matches[2] .= "\r" . $body[1] . "\r";
-				return new Div($matches); // Seems multiline-enabled block plugin
+				$instance = new Div($matches); // Seems multiline-enabled block plugin
 			}
+			return $instance;
 		}
 	}
-
-	return new Paragraph($text);
+	$instance = new Paragraph($text);
+	return $instance;
 }
 
 // Inline elements
@@ -191,7 +198,7 @@ class Inline extends Element
 
 	function & toPara($class = '')
 	{
-		$obj = & new Paragraph('', $class);
+		$obj = new Paragraph('', $class);
 		$obj->insert($this);
 		return $obj;
 	}
@@ -572,7 +579,7 @@ class Table extends Element
 		$is_template = ($this->type == 'c');
 		$row = array();
 		foreach ($cells as $cell)
-			$row[] = & new TableCell($cell, $is_template);
+			$row[] = new TableCell($cell, $is_template);
 		$this->elements[] = $row;
 	}
 
@@ -654,8 +661,8 @@ class Table extends Element
 	}
 }
 
-// , cell1  , cell2  ,  cell3 
-// , cell4  , cell5  ,  cell6 
+// , cell1  , cell2  ,  cell3
+// , cell4  , cell5  ,  cell6
 // , cell7  ,        right,==
 // ,left          ,==,  cell8
 class YTable extends Element
@@ -830,7 +837,7 @@ class Body extends Element
 	function Body($id)
 	{
 		$this->id            = $id;
-		$this->contents      = & new Element();
+		$this->contents      = new Element();
 		$this->contents_last = & $this->contents;
 		parent::Element();
 	}
@@ -901,7 +908,7 @@ class Body extends Element
 			// Line Break
 			if (substr($line, -1) == '~')
 				$line = substr($line, 0, -1) . "\r";
-			
+
 			// Other Character
 			if (isset($this->classes[$head])) {
 				$classname  = $this->classes[$head];
