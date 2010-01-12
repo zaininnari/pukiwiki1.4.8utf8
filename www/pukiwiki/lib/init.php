@@ -52,30 +52,22 @@ if ($die) die_message(nl2br("\n\n" . $die));
 
 /////////////////////////////////////////////////
 // Time settings
-//set date.timezone
+
+//set date.timezone for PHP5.1.0~
 //http://jp.php.net/manual/ja/function.date-default-timezone-set.php
-/*
 switch (LANG) {
 	case 'ja':
 			date_default_timezone_set('Asia/Tokyo');
 	break;
 	default:
-		if (ini_get('date.timezone') === '') {
-
-
-		}
-		;
+		if (ini_get('date.timezone') === '')
+			date_default_timezone_set('America/Los_Angeles');
 	break;
 }
-*/
-//@todo
-if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
-@date_default_timezone_set(@date_default_timezone_get());
 
 define('LOCALZONE', date('Z'));
 define('UTIME', time() - LOCALZONE);
 define('MUTIME', getmicrotime());
-
 
 
 /////////////////////////////////////////////////
