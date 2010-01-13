@@ -50,6 +50,11 @@ if (! file_exists(INI_FILE) || ! is_readable(INI_FILE)) {
 }
 if ($die) die_message(nl2br("\n\n" . $die));
 
+if (file_exists(DATA_HOME . 'custom.ini.php') || is_readable(DATA_HOME . 'custom.ini.php')) {
+	require(DATA_HOME . 'custom.ini.php');
+}
+
+
 /////////////////////////////////////////////////
 // Time settings
 
